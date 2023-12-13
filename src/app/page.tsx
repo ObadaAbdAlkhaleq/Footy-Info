@@ -1,113 +1,417 @@
-import Image from 'next/image'
+import { getMatches, getMatchesFinished, getMatchesTomorrow } from "@/api";
+import StandingsTable from "@/components/StandingsTable";
+import Status from "@/components/Status";
 
-export default function Home() {
+const Standings = [
+  {
+    position: 1,
+    team: {
+      id: 298,
+      name: "Girona FC",
+      shortName: "Girona",
+      tla: "GIR",
+      crest: "https://crests.football-data.org/298.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 13,
+    draw: 2,
+    lost: 1,
+    points: 41,
+    goalsFor: 38,
+    goalsAgainst: 20,
+    goalDifference: 18,
+  },
+  {
+    position: 2,
+    team: {
+      id: 86,
+      name: "Real Madrid CF",
+      shortName: "Real Madrid",
+      tla: "RMA",
+      crest: "https://crests.football-data.org/86.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 12,
+    draw: 3,
+    lost: 1,
+    points: 39,
+    goalsFor: 34,
+    goalsAgainst: 10,
+    goalDifference: 24,
+  },
+  {
+    position: 3,
+    team: {
+      id: 78,
+      name: "Club Atlético de Madrid",
+      shortName: "Atleti",
+      tla: "ATL",
+      crest: "https://crests.football-data.org/78.svg",
+    },
+    playedGames: 15,
+    form: null,
+    won: 11,
+    draw: 1,
+    lost: 3,
+    points: 34,
+    goalsFor: 32,
+    goalsAgainst: 14,
+    goalDifference: 18,
+  },
+  {
+    position: 4,
+    team: {
+      id: 81,
+      name: "FC Barcelona",
+      shortName: "Barça",
+      tla: "FCB",
+      crest: "https://crests.football-data.org/81.svg",
+    },
+    playedGames: 16,
+    form: null,
+    won: 10,
+    draw: 4,
+    lost: 2,
+    points: 34,
+    goalsFor: 30,
+    goalsAgainst: 18,
+    goalDifference: 12,
+  },
+  {
+    position: 5,
+    team: {
+      id: 77,
+      name: "Athletic Club",
+      shortName: "Athletic",
+      tla: "ATH",
+      crest: "https://crests.football-data.org/77.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 8,
+    draw: 5,
+    lost: 3,
+    points: 29,
+    goalsFor: 31,
+    goalsAgainst: 19,
+    goalDifference: 12,
+  },
+  {
+    position: 6,
+    team: {
+      id: 92,
+      name: "Real Sociedad de Fútbol",
+      shortName: "Real Sociedad",
+      tla: "RSO",
+      crest: "https://crests.football-data.org/92.svg",
+    },
+    playedGames: 16,
+    form: null,
+    won: 8,
+    draw: 5,
+    lost: 3,
+    points: 29,
+    goalsFor: 29,
+    goalsAgainst: 18,
+    goalDifference: 11,
+  },
+  {
+    position: 7,
+    team: {
+      id: 90,
+      name: "Real Betis Balompié",
+      shortName: "Real Betis",
+      tla: "BET",
+      crest: "https://crests.football-data.org/90.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 6,
+    draw: 8,
+    lost: 2,
+    points: 26,
+    goalsFor: 19,
+    goalsAgainst: 17,
+    goalDifference: 2,
+  },
+  {
+    position: 8,
+    team: {
+      id: 275,
+      name: "UD Las Palmas",
+      shortName: "Las Palmas",
+      tla: "LPA",
+      crest: "https://crests.football-data.org/275.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 7,
+    draw: 3,
+    lost: 6,
+    points: 24,
+    goalsFor: 14,
+    goalsAgainst: 13,
+    goalDifference: 1,
+  },
+  {
+    position: 9,
+    team: {
+      id: 82,
+      name: "Getafe CF",
+      shortName: "Getafe",
+      tla: "GET",
+      crest: "https://crests.football-data.org/82.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 5,
+    draw: 7,
+    lost: 4,
+    points: 22,
+    goalsFor: 18,
+    goalsAgainst: 20,
+    goalDifference: -2,
+  },
+  {
+    position: 10,
+    team: {
+      id: 87,
+      name: "Rayo Vallecano de Madrid",
+      shortName: "Rayo Vallecano",
+      tla: "RAY",
+      crest: "https://crests.football-data.org/87.svg",
+    },
+    playedGames: 16,
+    form: null,
+    won: 4,
+    draw: 8,
+    lost: 4,
+    points: 20,
+    goalsFor: 16,
+    goalsAgainst: 22,
+    goalDifference: -6,
+  },
+  {
+    position: 11,
+    team: {
+      id: 95,
+      name: "Valencia CF",
+      shortName: "Valencia",
+      tla: "VAL",
+      crest: "https://crests.football-data.org/95.svg",
+    },
+    playedGames: 16,
+    form: null,
+    won: 5,
+    draw: 4,
+    lost: 7,
+    points: 19,
+    goalsFor: 17,
+    goalsAgainst: 21,
+    goalDifference: -4,
+  },
+  {
+    position: 12,
+    team: {
+      id: 263,
+      name: "Deportivo Alavés",
+      shortName: "Alavés",
+      tla: "ALA",
+      crest: "https://crests.football-data.org/263.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 4,
+    draw: 4,
+    lost: 8,
+    points: 16,
+    goalsFor: 14,
+    goalsAgainst: 20,
+    goalDifference: -6,
+  },
+  {
+    position: 13,
+    team: {
+      id: 94,
+      name: "Villarreal CF",
+      shortName: "Villarreal",
+      tla: "VIL",
+      crest: "https://crests.football-data.org/94.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 4,
+    draw: 4,
+    lost: 8,
+    points: 16,
+    goalsFor: 22,
+    goalsAgainst: 29,
+    goalDifference: -7,
+  },
+  {
+    position: 14,
+    team: {
+      id: 79,
+      name: "CA Osasuna",
+      shortName: "Osasuna",
+      tla: "OSA",
+      crest: "https://crests.football-data.org/79.svg",
+    },
+    playedGames: 16,
+    form: null,
+    won: 4,
+    draw: 4,
+    lost: 8,
+    points: 16,
+    goalsFor: 18,
+    goalsAgainst: 26,
+    goalDifference: -8,
+  },
+  {
+    position: 15,
+    team: {
+      id: 89,
+      name: "RCD Mallorca",
+      shortName: "Mallorca",
+      tla: "MAL",
+      crest: "https://crests.football-data.org/89.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 2,
+    draw: 8,
+    lost: 6,
+    points: 14,
+    goalsFor: 14,
+    goalsAgainst: 20,
+    goalDifference: -6,
+  },
+  {
+    position: 16,
+    team: {
+      id: 559,
+      name: "Sevilla FC",
+      shortName: "Sevilla FC",
+      tla: "SEV",
+      crest: "https://crests.football-data.org/559.svg",
+    },
+    playedGames: 15,
+    form: null,
+    won: 2,
+    draw: 7,
+    lost: 6,
+    points: 13,
+    goalsFor: 20,
+    goalsAgainst: 21,
+    goalDifference: -1,
+  },
+  {
+    position: 17,
+    team: {
+      id: 264,
+      name: "Cádiz CF",
+      shortName: "Cádiz CF",
+      tla: "CAD",
+      crest: "https://crests.football-data.org/264.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 2,
+    draw: 7,
+    lost: 7,
+    points: 13,
+    goalsFor: 13,
+    goalsAgainst: 23,
+    goalDifference: -10,
+  },
+  {
+    position: 18,
+    team: {
+      id: 558,
+      name: "RC Celta de Vigo",
+      shortName: "Celta",
+      tla: "CEL",
+      crest: "https://crests.football-data.org/558.svg",
+    },
+    playedGames: 16,
+    form: null,
+    won: 1,
+    draw: 7,
+    lost: 8,
+    points: 10,
+    goalsFor: 15,
+    goalsAgainst: 25,
+    goalDifference: -10,
+  },
+  {
+    position: 19,
+    team: {
+      id: 83,
+      name: "Granada CF",
+      shortName: "Granada",
+      tla: "GRA",
+      crest: "https://crests.football-data.org/83.svg",
+    },
+    playedGames: 16,
+    form: null,
+    won: 1,
+    draw: 5,
+    lost: 10,
+    points: 8,
+    goalsFor: 20,
+    goalsAgainst: 36,
+    goalDifference: -16,
+  },
+  {
+    position: 20,
+    team: {
+      id: 267,
+      name: "UD Almería",
+      shortName: "Almería",
+      tla: "ALM",
+      crest: "https://crests.football-data.org/267.png",
+    },
+    playedGames: 16,
+    form: null,
+    won: 0,
+    draw: 4,
+    lost: 12,
+    points: 4,
+    goalsFor: 17,
+    goalsAgainst: 39,
+    goalDifference: -22,
+  },
+];
+
+export default async function Home() {
+  const getData = await getMatches();
+  const getDataFinished = await getMatchesFinished();
+  const getDataUpcoming = await getMatchesTomorrow();
+  // const teams = await getTeams();
+
+  const matchesDate = getData?.matches;
+  const matchesFinished = getDataFinished?.matches;
+  const matchesTomorrow = getDataUpcoming?.matches;
+
+  const date = new Date();
+  const dateS = date.toDateString();
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <section className="px-2 md:px-4 md:w-[700px]">
+      <div className="flex justify-between items-center mb-4 md:mb-2">
+        <p className="text-lg md:text-xl font-bold">Matches</p>
+        <div className="px-4 py-0 md:py-1 rounded-md text-sm bg-slate-600">
+          <p>{dateS}</p>
         </div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      <Status
+        matchesList={matchesDate}
+        matchesFinishedList={matchesFinished}
+        matchesUpcomingList={matchesTomorrow}
+      />
+      {/* <h1 className="text-2xl font-bold mb-4">League Standings</h1>
+      <StandingsTable standings={Standings} /> */}
+    </section>
+  );
 }
