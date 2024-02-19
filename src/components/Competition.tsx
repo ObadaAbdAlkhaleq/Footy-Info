@@ -1,15 +1,19 @@
-import { matchesType } from "@/types";
+import { matches } from "@/types";
 import Image from "next/image";
 
 type CompetitionProps = {
-  data: matchesType;
+  data: matches;
 };
 const Competition = ({ data }: CompetitionProps) => {
-  const date = new Date(data.utcDate);
-  const dateS = date.toDateString();
   const { competition } = data;
+  let utcDate = competition.utcDate;
+  let date: string = "";
+  if (utcDate !== undefined) {
+    date = new Date(utcDate).toDateString();
+  }
+
   return (
-    <div className="mb-4 flex justify-between items-center px-4 py-1 bg-slate-600 hover:bg-slate-700 rounded-md">
+    <div className="mb-4 flex justify-between items-center px-4 py-1 bg-slate-600 hover:bg-slate-700 rounded-md sticky top-16 z-10">
       <div className="flex space-x-4">
         <Image
           src={competition.emblem}
@@ -19,7 +23,7 @@ const Competition = ({ data }: CompetitionProps) => {
         />
         <p className="text-sm text-teal-400">{competition.name}</p>
       </div>
-      <p className="text-xs md:text-sm">{dateS}</p>
+      <p className="text-xs md:text-sm">{date}</p>
     </div>
   );
 };

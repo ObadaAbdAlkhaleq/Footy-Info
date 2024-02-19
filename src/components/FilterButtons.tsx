@@ -15,7 +15,6 @@ const FilterButtons = ({
   selected,
   onClick,
 }: FilterButtonsProps) => {
-  // console.log(selected);
   return (
     <div className="flex space-x-4 mb-2 md:mb-4">
       <button

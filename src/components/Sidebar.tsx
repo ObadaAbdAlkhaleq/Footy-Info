@@ -1,6 +1,6 @@
-import League from "./League";
+import LeagueLink from "./LeagueLink";
 
-const Leagues = [
+export const Leagues = [
   {
     id: 2021,
     name: "Premier League",
@@ -32,22 +32,10 @@ const Leagues = [
     emblem: "/leagues/ligue_1.webp",
   },
   {
-    id: 2016,
-    name: "Championship",
-    href: "championship",
-    emblem: "/leagues/championship.webp",
-  },
-  {
     id: 2017,
     name: "Primeira Liga",
     href: "primeira-liga",
     emblem: "/leagues/liga_portugal.webp",
-  },
-  {
-    id: 2013,
-    name: "Brasileirão Série A",
-    href: "brasileirao-serie-a",
-    emblem: "/leagues/brazilian_serie_a.webp",
   },
   {
     id: 2001,
@@ -55,17 +43,11 @@ const Leagues = [
     href: "champions-league",
     emblem: "/leagues/uefa_champions_league.png",
   },
-  {
-    id: 2003,
-    name: "Erdivisie",
-    href: "erdivisie",
-    emblem: "/leagues/erdivisie.png",
-  },
 ];
 
 const Sidebar = () => {
   return (
-    <section className="px-2 sticky top-16 md:px-4 py-2 bg-[rgb(40,46,58)] rounded-md">
+    <section className="px-2 sticky top-16 md:px-4 py-2 bg-[rgb(40,46,58)] hidden md:block rounded-md">
       <div>
         <p className="font-senibold lg:font-bold text-base lg:text-xl m-4 text-teal-400">
           Featured Leagues
@@ -77,7 +59,8 @@ const Sidebar = () => {
             className="gap-2 hover:bg-[rgb(66, 76, 96)]"
             key={idx}
           >
-            <League
+            <LeagueLink
+              id={league.id}
               name={league.name}
               href={league.href}
               emblem={league.emblem}

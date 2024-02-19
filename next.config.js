@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: { domains: ['crests.football-data.org', 'upload.wikimedia.org'] }
+  images: { remotePatterns: [{ hostname: 'crests.football-data.org' }, { hostname: 'upload.wikimedia.org' }] }
 }
 
 module.exports = nextConfig

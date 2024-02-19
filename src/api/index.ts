@@ -1,4 +1,4 @@
-import { apiOptions, matchesType } from "@/types";
+import { apiOptions, matches } from "@/types";
 
 const options: apiOptions = {
   next: { revalidate: 30 },
@@ -11,7 +11,7 @@ const options: apiOptions = {
 
 
 export const getMatches = async () => {
-  const matchData = await fetch(`${process.env.API_URL}/matches`, options);
+  const matchData = await fetch(`${process.env.API_URL}/matches?competitions=2014,2021,2002,2019,2015,2001`, options);
   return matchData.json();
 };
 
@@ -25,13 +25,13 @@ const nextDay = String(getDateMonth.getDate() + 2).padStart(2, '0');
 const yesterday = [ year, month, day ].join('-');
 const tomorrow = [ year, month, nextDay ].join('-');
 
-export const getMatchesFinished = async () => {
-  const matchData = await fetch(`${process.env.API_URL}/matches?date=${yesterday}`, options);
+export const getMatchesYesterday = async () => {
+  const matchData = await fetch(`${process.env.API_URL}/matches?competitions=2014,2021,2002,2019,2015,2001&date=${yesterday}`, options);
   return matchData.json();
 };
-export const getStandings = async (competitionId: number) => {
-  const standingsData = await fetch(`${process.env.API_URL}/competitions/${competitionId}/standings`, options);
-  return standingsData.json();
+export const getLeagueData = async (competitionId: number) => {
+  const leagueData = await fetch(`${process.env.API_URL}/competitions/${competitionId}/standings`, options);
+  return leagueData.json();
 };
 export const getMatchesTomorrow = async () => {
   const matchData = await fetch(`${process.env.API_URL}/matches?date=${tomorrow}`, options);
@@ -40,11 +40,7 @@ export const getMatchesTomorrow = async () => {
 
 export const filterLeague = async (filterData: string) => {
   const getLeague = await getMatches();
-  const filterLeague: matchesType[] = getLeague.matches;
+  const filterLeague: matches[] = getLeague.matches;
   const getData = filterLeague.filter((item) => item.competition.name === filterData);
   return getData;
 };
-// export const getTeams = async () => {
-//   const teamsData = await fetch(`${process.env.API_URL}/competitions/2001/teams/`, options);
-//   return teamsData.json();
-// };
