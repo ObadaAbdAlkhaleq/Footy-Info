@@ -17,6 +17,7 @@ import {
 } from "../ui/tooltip";
 import { standingsTable } from "@/types";
 import getTeamName from "@/app/actions/getTeamName";
+import { useEffect, useState } from "react";
 
 interface StandingTableProps {
   standings: standingsTable[];
@@ -30,6 +31,18 @@ const LeagueStanding: React.FC<StandingTableProps> = ({
   leagueName,
   groupName,
 }) => {
+  // fix hydration error
+  const [isMounted, setIsMounted] = useState(false);
+
+  // This is a side effect that runs after the first render and sets the isMounted state to true
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // This is a conditional rendering that returns null if the component is not mounted yet
+  if (!isMounted) {
+    return null;
+  }
   const lastFiveMatches = (form: string | null) => {
     let lastFive = form?.split("");
     return (
